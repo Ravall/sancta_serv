@@ -1,0 +1,24 @@
+{% extends 'foundation_layout.html' %}
+{% block page_title %}Число рождения {{ num }}{% endblock %}
+{% block meta_description %}{{ article.text.annonce }}{% endblock %}
+{% block meta_keywords %}{{ article.text.keywords }}{% endblock %}
+{% block content %}
+<div class='circle'>
+    <div class='num'>
+      <h2>{{ num }}</h2>
+      <div id='link'>
+          <a href='{% url 'num_home' %}'>расчитать другое<br/>число рождения</a>
+      </div>
+    </div>
+
+</div>
+<div class="title">
+  <h1>Число рождения {{ num }}</h1>
+</div>
+<div id='text_content'>
+    {% autoescape off %}
+        {{ article.text.content }}
+    {% endautoescape %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,28 @@
+{% extends 'foundation_layout.html' %}
+{% block page_title %}Значение числа рождения{% endblock %}
+{% block meta_description %}Все числа рождения, включая число рождения 11 и 22. Описание чисел рождения{% endblock %}
+{% block meta_keywords %}Число рождения, описание числа рождения{% endblock %}
+{% block content %}
+<div class='circle'>
+    <div class='all_num'>
+      <h1>значение<br>числа<br>рождения</h1>
+    </div>
+</div>
+
+<div id='text_content' class='all_num'>
+<a href='{% url 'num_home' %}'>рассчитать число рождения</a>
+<ul>
+    <li><a href='{% url 'num_birthday' 1 %}'>Число рождения 1</a></li>
+    <li><a href='{% url 'num_birthday' 2 %}'>Число рождения 2</a></li>
+    <li><a href='{% url 'num_birthday' 3 %}'>Число рождения 3</a></li>
+    <li><a href='{% url 'num_birthday' 4 %}'>Число рождения 4</a></li>
+    <li><a href='{% url 'num_birthday' 5 %}'>Число рождения 5</a></li>
+    <li><a href='{% url 'num_birthday' 6 %}'>Число рождения 6</a></li>
+    <li><a href='{% url 'num_birthday' 7 %}'>Число рождения 7</a></li>
+    <li><a href='{% url 'num_birthday' 8 %}'>Число рождения 8</a></li>
+    <li><a href='{% url 'num_birthday' 9 %}'>Число рождения 9</a></li>
+    <li><a href='{% url 'num_birthday' 11 %}'>Число рождения 11</a></li>
+    <li><a href='{% url 'num_birthday' 22 %}'>Число рождения 22</a></li>
+</ul>
+</div>
+{% endblock %}

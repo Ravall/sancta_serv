@@ -1,0 +1,24 @@
+{% extends 'foundation_layout.html' %}
+{% block page_title %}Расчитать число рождения {{ num }}{% endblock %}
+{% block meta_description %}Что такое число рождения, расчет числа рождения{% endblock %}
+{% block meta_keywords %}Число рождения, расчет числа рождения{% endblock %}
+{% block content %}
+    <div id='form_birtday' class='circle'>
+        <form action="/numerology/" method="post"
+              {% if form.errors %} class='error' {% endif %}>
+            {% csrf_token %}
+            <h1>число<br>рождения</h1>
+            {{ form.date }}
+            {{ form.date.errors }}
+            <div id='button'>
+                <button type="submit">расчитать</button>
+            </div>
+        </form>
+    </div>
+
+    <div id='text_content'>
+        {% autoescape off %}
+            {{ article.text.content }}
+        {% endautoescape %}
+    </div>
+{% endblock %}
