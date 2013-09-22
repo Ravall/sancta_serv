@@ -21,6 +21,10 @@ ALLOWED_HOSTS = ['sancta.ru', '127.0.0.1']
 
 INSTALLED_APPS += (
     'numerology',
+    'raven.contrib.django.raven_compat',
+)
+MIDDLEWARE_CLASSES += (
+    'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
 )
 
 SECRET_KEY = '#xrq3fac1=ehd2sh0$18&oy(da7@ae=d+8hox3v+t$4*g6d)u9'
@@ -39,4 +43,8 @@ CACHES = {
 }
 
 FAVICON_PATH = STATIC_URL + 'img/favicon.ico'
+
+RAVEN_CONFIG = {
+    'dsn': 'http://5ff6cd1e2a4240d4bb99785cb5ff6484:f8ad63d16b37493d94a713d968ede772@sentry.sancta.ru/4',
+}
 
