@@ -1,8 +1,14 @@
 {% extends 'foundation_layout.html' %}
+{% load static %}
 {% block page_title %}Число рождения {{ num }}{% endblock %}
 {% block meta_description %}{{ article.text.annonce }}{% endblock %}
 {% block meta_keywords %}{{ article.text.keywords }}{% endblock %}
-{% block meta_og_titile %}Мое число рождения {{ num }}!{% endblock %}
+{% block og_meta %}
+<meta property="og:title" content="Мое число рождения {{ num }}!" />
+<meta property="og:image" content="{% get_static_prefix %}img/{{num}}.jpg" />
+{% endblock %}
+
+
 {% block content %}
 <div class='circle'>
     <div class='num'>
@@ -15,7 +21,7 @@
 </div>
 <div class="title">
   <h1>Число рождения {{ num }}</h1>
-  <!--
+  <span class='system'>Рассказать друзьям:</span><br/>
   <script type="text/javascript">(function() {
   if (window.pluso)if (typeof window.pluso.start == "function") return;
   if (window.ifpluso==undefined) { window.ifpluso = 1;
@@ -26,7 +32,7 @@
     h.appendChild(s);
   }})();</script>
 <div class="pluso" data-background="none;" data-options="medium,square,line,horizontal,counter,sepcounter=1,theme=14" data-services="vkontakte,odnoklassniki,facebook,google,twitter,surfingbird,moimir"></div>
--->
+
 </div>
 
 <div id='text_content'>

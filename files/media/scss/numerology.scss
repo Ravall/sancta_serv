@@ -7,14 +7,15 @@ $color_main: #532f1b;
 $color_link: #8c4819;
 $color_error: #d25d15;
 
-@font-face {
-  font-family: 'agcrownstyle';
-  src: url('/static/Futura_Light-Normal_Regular.ttf');
-}
+$font_H: 'Open Sans', sans-serif;
 
 body {
 
-
+    span.system {
+        font-family: $font_H;
+        font-weight: 300;
+        font-size:1.2em;
+    }
     height:100%;
     min-width: $size_content_width;
     margin: 0px;
@@ -52,8 +53,8 @@ body {
     }
 
     h1 {
-        font-family: agcrownstyle;
-        font-weight: 400;
+        font-family: $font_H;
+        font-weight: 300;
         text-transform:uppercase;
     }
     ul {
@@ -66,7 +67,7 @@ body {
         display:block;
         text-align:center;
         li {
-            font-family: agcrownstyle;
+            font-family: $font_H;
             color: $color_error;
         }
     }
@@ -75,7 +76,7 @@ body {
         padding-top: 20px;
         margin-left: auto;
         margin-right: auto;
-        font-family: agcrownstyle;
+        font-family: $font_H;
         ul {
             padding: 0px;
             margin: 0px;
@@ -109,11 +110,11 @@ body {
         background: url('/static/img/fon_min.png') no-repeat center center;
         text-align:center;
         div.all_num {
-            padding-top: 90px;
+            padding-top: 70px;
         }
         div.num {
             line-height:65px;
-            font-family: agcrownstyle;
+            font-family: $font_H;
             font-size: 1.1em;
             div#link {
                 padding-top: 40px;
@@ -135,21 +136,24 @@ body {
         color: $color_main;
     }
     div#form_birtday {
+        h1 {
+            font-size:1.5em;
+        }
         form {
             padding-top: 50px;
             input {
                 height: 30px;
                 width: 200px;
-                font-size: 1.4em;
-                font-family: agcrownstyle;
+                font-size: 1em;
+                font-family: $font_H;
                 text-align: center;
             }
             button {
                 margin-top: 20px;
                 height: 30px;
                 width: 150px;
-                font-family: agcrownstyle;
-                font-size: 1.4em;
+                font-family: $font_H;
+                font-size: 1em;
             }
         }
         form.error {

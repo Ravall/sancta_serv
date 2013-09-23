@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content="{% block meta_description %}{% endblock %}" />
     <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+    {% block og_meta %}{% endblock %}
     <meta name="document-state" content="Dynamic" />
     <meta http-equiv="content-language" content="ru" />
     <title>Нумерология: {% block page_title %}{% endblock %}</title>
@@ -21,8 +22,7 @@
     <!-- <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"> -->
     <!-- <link rel="icon" href="/favicon.ico" type="image/x-icon"> -->
     <link type="text/css" rel="stylesheet" href="{% static "css/numerology.css" %}" charset="utf-8">
-    <link href='http://fonts.googleapis.com/css?family=Spirax' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Ubuntu:300&subset=cyrillic,latin' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:300|Spirax|Open+Sans:300&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
