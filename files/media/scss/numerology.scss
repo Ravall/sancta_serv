@@ -129,6 +129,10 @@ body {
                 font-family: 'Spirax', cursive;
                 font-weight: bold;
             }
+            h2.error {
+                font-size: 5em;
+                color: $color_error;
+            }
         }
     }
     div.title {

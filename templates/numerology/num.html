@@ -4,8 +4,9 @@
 {% block meta_description %}{{ article.text.annonce }}{% endblock %}
 {% block meta_keywords %}{{ article.text.keywords }}{% endblock %}
 {% block og_meta %}
-<meta property="og:title" content="Мое число рождения {{ num }}!" />
-<meta property="og:image" content="{% get_static_prefix %}img/{{num}}.jpg" />
+    <meta property="og:title" content="Мое число рождения {{ num }}!" />
+    <meta property="og:image" content="{% get_static_prefix %}img/{{num}}.jpg" />
+    <link rel="image_src" href="{% get_static_prefix %}img/{{num}}.jpg" />
 {% endblock %}
 
 
