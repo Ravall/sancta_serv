@@ -120,7 +120,7 @@ body {
                 padding-top: 40px;
                 line-height: 14px;
             }
-            h2 {
+            h2,h1 {
                 color: $color_main;
                 padding: 0px;
                 margin: 0px;
@@ -184,6 +184,9 @@ body {
     }
     div#text_content.all_num {
         font-size: 1.5em;
+        text-align: center;
+    }
+    div#buttons {
         text-align: center;
     }
 

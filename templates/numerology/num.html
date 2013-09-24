@@ -21,8 +21,17 @@
 
 </div>
 <div class="title">
-  <h1>Число рождения {{ num }}</h1>
-  <span class='system'>Рассказать друзьям:</span><br/>
+
+  </div>
+
+<div id='text_content'>
+    {% autoescape off %}
+        {{ article.text.content }}
+    {% endautoescape %}
+</div>
+
+<div id='buttons'>
+<span class='system'>Рассказать друзьям:</span><br/>
   <script type="text/javascript">(function() {
   if (window.pluso)if (typeof window.pluso.start == "function") return;
   if (window.ifpluso==undefined) { window.ifpluso = 1;
@@ -33,13 +42,6 @@
     h.appendChild(s);
   }})();</script>
 <div class="pluso" data-background="none;" data-options="medium,square,line,horizontal,counter,sepcounter=1,theme=14" data-services="vkontakte,odnoklassniki,facebook,google,twitter,surfingbird,moimir"></div>
-
-</div>
-
-<div id='text_content'>
-    {% autoescape off %}
-        {{ article.text.content }}
-    {% endautoescape %}
 </div>
 {% endblock %}
 
