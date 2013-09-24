@@ -1,7 +1,15 @@
 {% extends 'foundation_layout.html' %}
+{% load static %}
 {% block page_title %}Рассчитать число рождения {{ num }}{% endblock %}
 {% block meta_description %}Что такое число рождения, расчет числа рождения{% endblock %}
 {% block meta_keywords %}Число рождения, расчет числа рождения{% endblock %}
+
+{% block og_meta %}
+    <meta property="og:image" content="{% get_static_prefix %}img/1.jpg" />
+    <link rel="image_src" href="{% get_static_prefix %}img/1.jpg" />
+{% endblock %}
+
+
 {% block content %}
     <div id='form_birtday' class='circle'>
         <form action="/numerology/" method="post"
