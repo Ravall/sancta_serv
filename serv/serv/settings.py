@@ -21,6 +21,7 @@ ALLOWED_HOSTS = ['sancta.ru', '127.0.0.1']
 
 INSTALLED_APPS += (
     'numerology',
+    'biorythms',
     'raven.contrib.django.raven_compat',
 )
 MIDDLEWARE_CLASSES += (

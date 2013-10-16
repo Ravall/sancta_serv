@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'frontend.views.index', name='home'),
     url(r'^numerology/', include('numerology.urls')),
+    url(r'^biorythms/', include('biorythms.urls')),
 
     url(r'', include('robots_txt.urls')),
     url(r'^', include('favicon.urls')),

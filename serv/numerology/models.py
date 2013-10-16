@@ -19,7 +19,7 @@ class BirthdayForm(forms.Form):
         ),
         validators=[validator_date],
         error_messages = {
-            'required': "введите дату. пример: 03.11.193",
+            'required': "введите дату. Пример: 03.11.1983",
         }
     )
 

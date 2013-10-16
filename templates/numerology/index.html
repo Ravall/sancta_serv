@@ -1,4 +1,4 @@
-{% extends 'foundation_layout.html' %}
+{% extends 'numerology/layout.html' %}
 {% load static %}
 {% block page_title %}Рассчитать число рождения {{ num }}{% endblock %}
 {% block meta_description %}Число рождения — одно из важнейших понятий в нумерологии. Расчет числа рождения определяет унаследованные черты характера - то, с чем человек приходит в мир.{% endblock %}
@@ -11,7 +11,7 @@
 
 
 {% block content %}
-    <div id='form_birtday' class='circle'>
+    <div id='form' class='circle'>
         <form action="/numerology/" method="post"
               {% if form.errors %} class='error' {% endif %}>
             {% csrf_token %}
@@ -29,4 +29,13 @@
             {{ article.text.content }}
         {% endautoescape %}
     </div>
+{% endblock %}
+
+{% block block_js %}
+<script type="text/javascript">
+    jQuery(function(){
+        jQuery('input[placeholder], textarea[placeholder]').placeholder('');
+        jQuery("#id_date").mask("99.99.9999");
+    });
+</script>
 {% endblock %}

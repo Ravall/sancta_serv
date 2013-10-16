@@ -1,0 +1,60 @@
+{% extends 'biorythms/layout.html' %}
+{% load static %}
+
+{% block content %}
+<div id='title'>
+    <h1> <a href='{{ link_pref }}'>&larr;</a>
+      Биоритмы на {{ month_name }} {%if year %}{{year}}{% endif %}
+    <a href='{{ link_next }}'>&rarr;</a> </h1>
+    <h2> Дата рождения: {{ birthday }} </h2>
+</div>
+
+<div id='biorythms_chart' style='height:300px;'></div>
+
+<div id='title'>
+  <h2>Критические дни</h2>
+</div>
+
+{% endblock %}
+
+{% block block_js %}
+<script src="{% static "js/raphael-min.js" %}"></script>
+<script src="{% static "js/morris-0.4.3.min.js" %}"></script>
+<script type="text/javascript">
+    new Morris.Line({
+  element: 'biorythms_chart',
+  {% autoescape off %}
+      data: {{ data }},
+  {% endautoescape %}
+  dateFormat: function (x) {
+      function addZero(i) {
+          return (i < 10)? "0" + i: i;
+      }
+      var day = new Date(x);
+      return (
+          addZero(day.getDate()) + '.' +
+          addZero(day.getMonth()+1) + '.' +
+          day.getFullYear()
+      );
+  },
+  xLabelFormat: function (x) {
+      function addZero(i) {
+          return (i < 10)? "0" + i: i;
+      }
+      var day = new Date(x);
+      return addZero(day.getDate())+'.'+addZero(day.getMonth()+1);
+  },
+
+  xkey: 'day',
+  ykeys: ['fiz', 'emo', 'smart'],
+  labels: ['физический', 'эмоциональный', 'интеллектуальный'],
+  hideHover: 'auto',
+  {% if today %}
+  events: ['{{ today }}'],
+  {% endif %}
+  pointSize:2,
+  lineColors: ['#e67869','#3b9647', '#193020'],
+});
+
+</script>
+{% endblock %}

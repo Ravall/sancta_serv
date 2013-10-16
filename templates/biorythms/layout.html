@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block css %}
+    <link
+        type="text/css" rel="stylesheet"
+        href="{% static "css/morris-0.4.3.min.css" %}" charset="utf-8">
+    <link
+        type="text/css" rel="stylesheet"
+        href="{% static "css/biorythms.css" %}" charset="utf-8">
+{% endblock %}
+
+{% block meta_title %}
+Биоритмы: {% block page_title %}{% endblock %}
+{% endblock %}
+
+
+{% block base_content %}
+<style type="text/css">
+    div#top {
+        background: url('/static/img/up_line.png') repeat-x;
+        height: 150px;
+    }
+
+    div#down {
+        margin-top: 50px;
+        background: url('/static/img/down_line.png') repeat-x;
+        height: 150px;
+    }
+
+    div#title {
+        padding-top: 50px;
+        text-align: center;
+    }
+
+</style>
+<div id='top'></div>
+{% block content %}{% endblock %}
+<div id='down'></div>
+{% endblock %}
+
+

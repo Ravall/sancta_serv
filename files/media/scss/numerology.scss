@@ -1,13 +1,4 @@
-$size_content_width: 620px;
-$size_content_width_clear: 600px;
-$size_content_height: 600px;
-
-$color_bg: #fcfaf5;
-$color_main: #532f1b;
-$color_link: #8c4819;
-$color_error: #d25d15;
-
-$font_H: 'Open Sans', sans-serif;
+@import "variable.scss";
 
 body {
 
@@ -16,11 +7,8 @@ body {
         font-weight: 300;
         font-size:1.2em;
     }
-    height:100%;
-    min-width: $size_content_width;
-    margin: 0px;
-    padding: 0px;
-    background: $color_bg;
+
+
     div#ul, div#ur, div#dr, div#dl {
         height:100%;
         min-height: $size_content_height;
@@ -45,60 +33,9 @@ body {
     }
 
 
-    a {
-        color:$color_link;
-        &:hover {
-            color:#000;
-        }
-    }
 
-    h1 {
-        font-family: $font_H;
-        font-weight: 300;
-        text-transform:uppercase;
-    }
-    ul {
-        list-style-type: none;
-        padding-left: 0px;
-    }
-    ul.errorlist {
-        padding: 0px;
-        margin: 0px;
-        display:block;
-        text-align:center;
-        li {
-            font-family: $font_H;
-            color: $color_error;
-        }
-    }
 
-    div#menu {
-        padding-top: 20px;
-        margin-left: auto;
-        margin-right: auto;
-        font-family: $font_H;
-        ul {
-            padding: 0px;
-            margin: 0px;
-            display:block;
-            text-align:center;
-            li {
-                display: inline; /* Отображать как строчный элемент */
-                margin-right: 5px; /* Отступ слева */
-                padding: 3px; /* Поля вокруг текста */
-                background: $color_bg;
-                a {
-                    font-size: 1.2em;
-                }
-            }
-            li.active {
-                a {
-                    color: #000;
-                    text-decoration: none;
-                }
-            }
-        }
-    }
+
 
 
     div.circle {
@@ -139,46 +76,16 @@ body {
         text-align: center;
         color: $color_main;
     }
-    div#form_birtday {
+    div#form {
         h1 {
             font-size:1.5em;
         }
         form {
             padding-top: 50px;
-            input {
-                height: 30px;
-                width: 200px;
-                font-size: 1em;
-                font-family: $font_H;
-                text-align: center;
-            }
-            button {
-                margin-top: 20px;
-                height: 30px;
-                width: 150px;
-                font-family: $font_H;
-                font-size: 1em;
-            }
-        }
-        form.error {
-            button {
-                margin-top: 5px;
-            }
         }
     }
 
-    div#text_content {
-        margin-left: auto;
-        margin-right: auto;
-        width: $size_content_width_clear;
-        background: $color_bg;
-        padding-bottom: 50px;
-        padding-right: 10px;
-        padding-left: 10px;
-        font-size: 1.2em;
-        font-family: 'Ubuntu', sans-serif;
-        color:#532f1b;
-    }
+
     div#text_content.error {
         text-align: center;
     }
