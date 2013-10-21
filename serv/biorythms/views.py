@@ -10,8 +10,13 @@ from datetime import datetime, timedelta, date
 from calendar import monthrange, month_name
 from math import sin, pi
 from django.core.urlresolvers import reverse
-from dateutil.relativedelta import relativedelta
 
+from dateutil.relativedelta import relativedelta
+from dateutil.rrule import rrule, DAILY
+
+PHYSICAL_PERIOD = 23
+EMOTIONAL_PERIOD = 28
+BRAIN_PERIOD = 33
 
 def index(request):
     if request.method == 'POST':
@@ -33,14 +38,50 @@ def index(request):
     )
 
 
+def bio(time_diff, period):
+    return sin(2 * pi * time_diff / period) * 100
+
+
+def git_important_days(birthday_dt, begin_date, end_date):
+    '''
+    высчитывает особые дни в период begin_date по end_date
+    '''
+    def get_critical_preiods(day, birthday_dt):
+        critical = []
+        for period in (PHYSICAL_PERIOD, EMOTIONAL_PERIOD, BRAIN_PERIOD):
+            time_diff = (day - birthday_dt).days
+            if int(bio(time_diff, period) * bio(time_diff+1, period)) <= 0:
+                critical.append({
+                    'period':period,
+                    # + график возрастает
+                    # - график убывает
+                    'type': '+' if int(bio(time_diff+1, period))>0 else '-'
+                })
+        return critical
+    days = {}
+    for day in rrule(DAILY, dtstart=begin_date, until=end_date):
+
+        critical = get_critical_preiods(day, birthday_dt)
+        if critical:
+            if not days.get(day):
+                days[day] = {}
+            days[day].update({
+                'is_critical': True,
+                'critical_perods': critical,
+            })
+    print days
+    return days
+
+
+
+
 def biorythm(request, birthday, month, year):
     try:
         birthday_dt = datetime.strptime(birthday, '%Y-%m-%d')
     except ValueError:
         raise Http404()
 
-    def bio(time_diff, period):
-        return sin(2 * pi * time_diff / period) * 100
+
 
     months = [
         'январь', 'февраль', 'март',
@@ -62,19 +103,6 @@ def biorythm(request, birthday, month, year):
 
     begin_days = (begin_date - birthday_dt.date()).days
 
-    def get_critical_days():
-        def is_critical_day(i, period):
-            return ((begin_days + i) * 2 / float(period)) % 1 == 0
-        days = {}
-        for i in xrange(34):
-            for period in (23, 28, 33):
-                if is_critical_day(i, period):
-                    t = (begin_days + i)
-                    day = (birthday_dt+timedelta(days=t)).strftime('%Y-%m-%d')
-                    if not days.get(day):
-                        days[day] = []
-                    days[day] += (period,)
-        return days
 
     data = [
         {
@@ -106,12 +134,17 @@ def biorythm(request, birthday, month, year):
         {
             'birthday': birthday_dt.strftime('%d.%m.%Y'),
             'data': json.dumps(data),
-            'today': (str(today) if ch_month == today.month and ch_year == today.year else None),
+            'today': (
+                str(today) if ch_month == today.month and ch_year == today.year
+                else None
+            ),
             'month_name': months[cur_date.month-1],
             'year': ch_year if ch_year != today.year else None,
             'link_pref':get_link(-1),
             'link_next':get_link(1),
-            'critical_days': get_critical_days()
+            'critical_days': git_important_days(
+                birthday_dt, begin_date, end_date
+            )
         },
         context_instance=RequestContext(request)
     )
