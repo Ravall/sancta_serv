@@ -13,6 +13,8 @@ from django.core.urlresolvers import reverse
 import collections
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, DAILY
+from pytils import dt as pytils_dt
+
 
 PHYSICAL_PERIOD = 23
 EMOTIONAL_PERIOD = 28
@@ -149,7 +151,7 @@ def biorythm(request, birthday, month, year):
                 str(today) if ch_month == today.month and ch_year == today.year
                 else None
             ),
-            'month_name': months[cur_date.month-1],
+            'current_date': cur_date,
             'year': ch_year if ch_year != today.year else None,
             'link_pref':get_link(-1),
             'link_next':get_link(1),

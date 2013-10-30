@@ -23,6 +23,7 @@ INSTALLED_APPS += (
     'numerology',
     'biorythms',
     'raven.contrib.django.raven_compat',
+    'pytils'
 )
 MIDDLEWARE_CLASSES += (
     'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',

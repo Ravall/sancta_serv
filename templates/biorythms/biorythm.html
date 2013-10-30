@@ -1,17 +1,25 @@
 {% extends 'biorythms/layout.html' %}
 {% load static %}
+{% load pytils_dt %}
 
 {% block content %}
 <div id='title'>
     <h1> <a href='{{ link_pref }}'>&larr;</a>
-      Биоритмы на {{ month_name }} {%if year %}{{year}}{% endif %}
+      Биоритмы на {{ current_date|ru_strftime_preposition:"%B" }} {%if year %}{{year}}{% endif %}
     <a href='{{ link_next }}'>&rarr;</a> </h1>
     <h2> Дата рождения: {{ birthday }} </h2>
 </div>
 
 <div id='biorythms_chart' style='height:300px;'></div>
 
-<div id='title'>
+
+<div id='content'>
+<div id='todayinfo'>
+    <h2>Сегодня</h2>
+</div>
+<div id='dates_in_month'>
+
+  <h2>Важные дни {{ month_name }} {%if year %}{{year}}{% endif %}</h2>
   {% spaceless %}
   {% for day,info in critical_days.items %}
       {% if  info.is_great_critical_day %}
@@ -60,6 +68,7 @@
   {% endfor %}
 {% endspaceless %}
 
+</div>
 </div>
 
 {% endblock %}
