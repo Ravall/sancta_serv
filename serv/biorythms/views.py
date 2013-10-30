@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, date
 from calendar import monthrange, month_name
 from math import sin, pi
 from django.core.urlresolvers import reverse
-
+import collections
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, DAILY
 
@@ -48,15 +48,17 @@ def git_important_days(birthday_dt, begin_date, end_date):
     '''
     def get_critical_preiods(day, birthday_dt):
         critical = []
-        for period in (PHYSICAL_PERIOD, EMOTIONAL_PERIOD, BRAIN_PERIOD):
+        for period in (EMOTIONAL_PERIOD, PHYSICAL_PERIOD, BRAIN_PERIOD):
             time_diff = (day - birthday_dt).days
-            if int(bio(time_diff, period) * bio(time_diff+1, period)) <= 0:
+            if int(bio(time_diff, period) * bio(time_diff+1, period)) < 0 \
+                or int(bio(time_diff, period)) == 0:
                 critical.append({
                     'period':period,
                     # + график возрастает
                     # - график убывает
                     'type': '+' if int(bio(time_diff+1, period))>0 else '-'
                 })
+
         return critical
     days = {}
     for day in rrule(DAILY, dtstart=begin_date, until=end_date):
@@ -64,13 +66,22 @@ def git_important_days(birthday_dt, begin_date, end_date):
         critical = get_critical_preiods(day, birthday_dt)
         if critical:
             if not days.get(day):
-                days[day] = {}
-            days[day].update({
+                days[day.date()] = {}
+            days[day.date()].update({
                 'is_critical': True,
                 'critical_perods': critical,
             })
-    print days
-    return days
+
+            if len(critical) == 3 \
+            and not reduce(lambda res, x: res+(x['type']!='+'), critical, 0):
+                days[day.date()].update({
+                'is_critical': False,
+                'is_great_critical_day': True,
+                'critical_perods': critical,
+            })
+
+
+    return collections.OrderedDict(sorted(days.items()))
 
 
 
@@ -144,7 +155,12 @@ def biorythm(request, birthday, month, year):
             'link_next':get_link(1),
             'critical_days': git_important_days(
                 birthday_dt, begin_date, end_date
-            )
+            ),
+            'consts': {
+                'PHYSICAL_PERIOD': PHYSICAL_PERIOD,
+                'EMOTIONAL_PERIOD': EMOTIONAL_PERIOD,
+                'BRAIN_PERIOD': BRAIN_PERIOD
+            }
         },
         context_instance=RequestContext(request)
     )

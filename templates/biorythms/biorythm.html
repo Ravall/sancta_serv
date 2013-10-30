@@ -12,7 +12,54 @@
 <div id='biorythms_chart' style='height:300px;'></div>
 
 <div id='title'>
-  <h2>Критические дни</h2>
+  {% spaceless %}
+  {% for day,info in critical_days.items %}
+      {% if  info.is_great_critical_day %}
+          <h3>{{ day }}</h3>
+          <h3><b>Великий критический день</b></h3>
+
+      {% elif  info.is_critical %}
+          <h3>{{ day }}</h3>
+          <p>
+          {% if info.critical_perods|length == 2 %}
+              <b>Двойной критический день</b>:
+          {% elif info.critical_perods|length == 3 %}
+              <b>Тройной критический день</b>:
+          {% else %}
+              <b>Критический день</b>:
+          {% endif %}
+
+
+          {% for period in info.critical_perods %}
+
+              {% if  forloop.counter0 == 0 %}
+                  <span>Переключение фазы </span>
+              {% elif forloop.counter0|add:1 == info.critical_perods|length %}
+                  <span> и </span>
+              {% else %}
+                  <span>, </span>
+              {% endif %}
+
+              {% if period.period == consts.PHYSICAL_PERIOD %}
+                  <span>физического</span>
+              {% elif period.period == consts.EMOTIONAL_PERIOD %}
+                  <span>эмоционального</span>
+              {% elif period.period == consts.BRAIN_PERIOD %}
+                  <span>умственного</span>
+              {% endif %}
+
+
+              {% if  forloop.counter0|add:1 == info.critical_perods|length %}
+                <span> биоритма</span>
+              {% endif %}
+
+
+          {% endfor %}
+          </p>
+      {% endif %}
+  {% endfor %}
+{% endspaceless %}
+
 </div>
 
 {% endblock %}

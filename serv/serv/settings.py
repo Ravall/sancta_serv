@@ -36,10 +36,11 @@ WSGI_APPLICATION = 'serv.wsgi.application'
 CACHE_API_TIMEOUT = 60*60*24*3
 CACHE_API_TIMEOUT_FAST = 60*1
 
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/home/var/cache/'
+        'LOCATION': '/home/var/cache/' if not DEBUG else '/tmp/cache'
     },
 }
 
