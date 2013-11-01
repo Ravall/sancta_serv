@@ -1,11 +1,12 @@
 {% extends 'biorythms/layout.html' %}
 {% load static %}
 {% load pytils_dt %}
+{% load sancta_date %}
 
 {% block content %}
 <div id='title'>
     <h1> <a href='{{ link_pref }}'>&larr;</a>
-      Биоритмы на {{ current_date|ru_strftime_preposition:"%B" }} {%if year %}{{year}}{% endif %}
+      Биоритмы на {{ current_date|ru_strftime:"%B" }} {%if year %}{{year}}{% endif %}
     <a href='{{ link_next }}'>&rarr;</a> </h1>
     <h2> Дата рождения: {{ birthday }} </h2>
 </div>
