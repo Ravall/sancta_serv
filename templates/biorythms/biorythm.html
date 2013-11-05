@@ -1,14 +1,14 @@
 {% extends 'biorythms/layout.html' %}
 {% load static %}
-{% load pytils_dt %}
 {% load sancta_date %}
+{% load bio_dayinfo %}
 
 {% block content %}
 <div id='title'>
     <h1> <a href='{{ link_pref }}'>&larr;</a>
-      Биоритмы на {{ current_date|ru_strftime:"%B" }} {%if year %}{{year}}{% endif %}
+      Биоритмы на {{ current_date|snct_dateformat:"[M1] [iY]" }}
     <a href='{{ link_next }}'>&rarr;</a> </h1>
-    <h2> Дата рождения: {{ birthday }} </h2>
+    <h2> Дата рождения: {{ birthday|snct_dateformat:"[d].[m].[y]" }} </h2>
 </div>
 
 <div id='biorythms_chart' style='height:300px;'></div>
@@ -16,58 +16,33 @@
 
 <div id='content'>
 <div id='todayinfo'>
-    <h2>Сегодня</h2>
+    <h2>Сегодня:
+        <a href='#'>{{ today_date| snct_dateformat:"[d] [M2] [Y]"}}</a>
+    </h2>
+    {% if today_date in critical_days %}
+      <div>
+      <b>{{ today_info|critical_type_info }}:</b>
+      {{ today_info|period_info  }}
+      </div>
+    {% endif %}
+    <div>
+        физический биоритм: {{ today_info|biorithm:23|safe }}<br/>
+        эмоциональный биоритм: {{ today_info|biorithm:28|safe}}<br/>
+        умственный биоритм: {{ today_info|biorithm:33|safe}}<br/>
+    </div>
 </div>
 <div id='dates_in_month'>
 
-  <h2>Важные дни {{ month_name }} {%if year %}{{year}}{% endif %}</h2>
-  {% spaceless %}
+  <h2>Важные дни {{ current_date|snct_dateformat:"[M2] [iY]" }}</h2>
   {% for day,info in critical_days.items %}
       {% if  info.is_great_critical_day %}
           <h3>{{ day }}</h3>
-          <h3><b>Великий критический день</b></h3>
-
-      {% elif  info.is_critical %}
+          <h3><b>{{ info|critical_type_info }}</b></h3>
+      {% elif info.is_critical %}
           <h3>{{ day }}</h3>
-          <p>
-          {% if info.critical_perods|length == 2 %}
-              <b>Двойной критический день</b>:
-          {% elif info.critical_perods|length == 3 %}
-              <b>Тройной критический день</b>:
-          {% else %}
-              <b>Критический день</b>:
-          {% endif %}
-
-
-          {% for period in info.critical_perods %}
-
-              {% if  forloop.counter0 == 0 %}
-                  <span>Переключение фазы </span>
-              {% elif forloop.counter0|add:1 == info.critical_perods|length %}
-                  <span> и </span>
-              {% else %}
-                  <span>, </span>
-              {% endif %}
-
-              {% if period.period == consts.PHYSICAL_PERIOD %}
-                  <span>физического</span>
-              {% elif period.period == consts.EMOTIONAL_PERIOD %}
-                  <span>эмоционального</span>
-              {% elif period.period == consts.BRAIN_PERIOD %}
-                  <span>умственного</span>
-              {% endif %}
-
-
-              {% if  forloop.counter0|add:1 == info.critical_perods|length %}
-                <span> биоритма</span>
-              {% endif %}
-
-
-          {% endfor %}
-          </p>
+          <p><b>{{ info|critical_type_info }}</b>: {{ info|period_info }}</p>
       {% endif %}
   {% endfor %}
-{% endspaceless %}
 
 </div>
 </div>
@@ -106,8 +81,8 @@
   ykeys: ['fiz', 'emo', 'smart'],
   labels: ['физический', 'эмоциональный', 'интеллектуальный'],
   hideHover: 'auto',
-  {% if today %}
-  events: ['{{ today }}'],
+  {% if today_date|snct_dateformat:"[m].[y]" == current_date|snct_dateformat:"[m].[y]" %}
+  events: ['{{ today_date|snct_dateformat:"[Y]-[mm]-[dd]" }}'],
   {% endif %}
   pointSize:2,
   lineColors: ['#e67869','#3b9647', '#193020'],

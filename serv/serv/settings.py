@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from control_dj.settings import *
-
 if DEBUG:
     DATABASES = {
         'default': {
@@ -14,6 +13,7 @@ if DEBUG:
     }
 else:
     from production import DATABASES
+
 API_URL = 'http://api.sancta.local' if not DEBUG else 'http://api.sancta.ru'
 
 ALLOWED_HOSTS = ['sancta.ru', '127.0.0.1']

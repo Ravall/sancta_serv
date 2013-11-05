@@ -44,6 +44,12 @@ def index(request):
 def bio(time_diff, period):
     return sin(2 * pi * time_diff / period) * 100
 
+def day_bio(time_diff):
+    return {
+        PHYSICAL_PERIOD: bio(time_diff, PHYSICAL_PERIOD),
+        EMOTIONAL_PERIOD: bio(time_diff, EMOTIONAL_PERIOD),
+        BRAIN_PERIOD: bio(time_diff, BRAIN_PERIOD),
+    }
 
 def git_important_days(birthday_dt, begin_date, end_date):
     '''
@@ -65,7 +71,6 @@ def git_important_days(birthday_dt, begin_date, end_date):
         return critical
     days = {}
     for day in rrule(DAILY, dtstart=begin_date, until=end_date):
-
         critical = get_critical_preiods(day, birthday_dt)
         if critical:
             if not days.get(day):
@@ -73,6 +78,7 @@ def git_important_days(birthday_dt, begin_date, end_date):
             days[day.date()].update({
                 'is_critical': True,
                 'critical_perods': critical,
+                'biorythms': day_bio((day - birthday_dt).days)
             })
 
             if len(critical) == 3 \
@@ -143,22 +149,31 @@ def biorythm(request, birthday, month, year):
             args = (birthday,)
         return reverse('bio_birthday', args=args)
 
+
+    critical_days = git_important_days(birthday_dt, begin_date, end_date)
+
+
+    try:
+        today_info = critical_days[today]
+    except:
+        today_info = {
+            'biorythms': day_bio(
+                (today - birthday_dt.date()).days
+            )
+        }
+
+
     return render_to_response(
         'biorythms/biorythm.html',
         {
-            'birthday': birthday_dt.strftime('%d.%m.%Y'),
+            'birthday': birthday_dt,
+            'today_date': today,
+            'today_info': today_info,
             'data': json.dumps(data),
-            'today': (
-                str(today) if ch_month == today.month and ch_year == today.year
-                else None
-            ),
             'current_date': cur_date,
-            'year': ch_year if ch_year != today.year else None,
             'link_pref':get_link(-1),
             'link_next':get_link(1),
-            'critical_days': git_important_days(
-                birthday_dt, begin_date, end_date
-            ),
+            'critical_days': critical_days,
             'consts': {
                 'PHYSICAL_PERIOD': PHYSICAL_PERIOD,
                 'EMOTIONAL_PERIOD': EMOTIONAL_PERIOD,
