@@ -5,9 +5,11 @@
 
 {% block content %}
 <div id='title'>
-    <h1> <a href='{{ link_pref }}'>&larr;</a>
-      Биоритмы на {{ current_date|snct_dateformat:"[M1] [iY]" }}
-    <a href='{{ link_next }}'>&rarr;</a> </h1>
+    <h1>
+      <a href='{% url 'bio_birthday' birthday today_date|snct_minc:"-1"|snct_dateformat:"[Y]-[mm]-01" %}'>&larr;</a>
+      Биоритмы на {{ today_date|snct_dateformat:"[M1] [iY]" }}
+    <a href='{% url 'bio_birthday' birthday today_date|snct_minc:"1"|snct_dateformat:"[Y]-[mm]-01" %}'>&rarr;</a>
+    </h1>
     <h2> Дата рождения: {{ birthday|snct_dateformat:"[d].[m].[y]" }} </h2>
 </div>
 
@@ -15,36 +17,31 @@
 
 
 <div id='content'>
-<div id='todayinfo'>
-    <h2>Сегодня:
-        <a href='#'>{{ today_date| snct_dateformat:"[d] [M2] [Y]"}}</a>
+<h2>
+        <a href='{% url 'bio_birthday' birthday today_date|snct_dinc:"-1" %}'>&larr;</a>
+        {{ today_date| snct_dateformat:"[iToday] [d] [M2] [Y]"}}
+        <a href='{% url 'bio_birthday' birthday today_date|snct_dinc:"1" %}'>&rarr;</a>
     </h2>
+<div id='todayinfo'>
+
+
+
+    <div class='biorithms'>
+        Физический биоритм: {{ today_info|biorithm:23|safe }}<br/>
+        Эмоциональный биоритм: {{ today_info|biorithm:28|safe}}<br/>
+        Умственный биоритм: {{ today_info|biorithm:33|safe}}<br/>
+    </div>
+
+    {% autoescape off %}
     {% if today_date in critical_days %}
-      <div>
-      <b>{{ today_info|critical_type_info }}:</b>
+      <div class='day_info'>
+      <b>Особенность дня:</b>
       {{ today_info|period_info  }}
       </div>
     {% endif %}
-    <div>
-        физический биоритм: {{ today_info|biorithm:23|safe }}<br/>
-        эмоциональный биоритм: {{ today_info|biorithm:28|safe}}<br/>
-        умственный биоритм: {{ today_info|biorithm:33|safe}}<br/>
-    </div>
+    {% endautoescape %}
 </div>
-<div id='dates_in_month'>
 
-  <h2>Важные дни {{ current_date|snct_dateformat:"[M2] [iY]" }}</h2>
-  {% for day,info in critical_days.items %}
-      {% if  info.is_great_critical_day %}
-          <h3>{{ day }}</h3>
-          <h3><b>{{ info|critical_type_info }}</b></h3>
-      {% elif info.is_critical %}
-          <h3>{{ day }}</h3>
-          <p><b>{{ info|critical_type_info }}</b>: {{ info|period_info }}</p>
-      {% endif %}
-  {% endfor %}
-
-</div>
 </div>
 
 {% endblock %}
@@ -81,7 +78,7 @@
   ykeys: ['fiz', 'emo', 'smart'],
   labels: ['физический', 'эмоциональный', 'интеллектуальный'],
   hideHover: 'auto',
-  {% if today_date|snct_dateformat:"[m].[y]" == current_date|snct_dateformat:"[m].[y]" %}
+  {% if today_date|snct_dateformat:"[m].[y]" == today_date|snct_dateformat:"[m].[y]" %}
   events: ['{{ today_date|snct_dateformat:"[Y]-[mm]-[dd]" }}'],
   {% endif %}
   pointSize:2,

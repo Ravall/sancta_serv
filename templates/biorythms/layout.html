@@ -35,20 +35,29 @@
 
     div#content {
         margin: 0 50px;
+        min-height: 300px;
+        text-align: center;
     }
     div#todayinfo {
-        float: left;
-        width: 40%;
+        width: 400px;
+        margin:10px auto;
         padding-top: 10px;
-    }
-    div#dates_in_month {
-        margin-left: 41%;
-         padding-top: 10px;
+        text-align: left;
     }
 
-    span.bio_critical {
-        color: red;
+    span.attention {
+        color: #e67869;
     }
+
+    div.biorithms {
+        font-size: 1.2em;
+    }
+
+    div.day_info {
+        font-size: 1.2em;
+        padding-top: 20px;
+    }
+
 </style>
 <div id='top'></div>
 {% block content %}{% endblock %}

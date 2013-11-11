@@ -7,19 +7,17 @@ from serv import utils
 import json
 from numerology.models import BirthdayForm
 from datetime import datetime, timedelta, date
-from calendar import monthrange, month_name
-from math import sin, pi
+
 from django.core.urlresolvers import reverse
-import collections
+
 from dateutil.relativedelta import relativedelta
-from dateutil.rrule import rrule, DAILY
+
 from pytils import dt as pytils_dt
-import support
-
-
-PHYSICAL_PERIOD = 23
-EMOTIONAL_PERIOD = 28
-BRAIN_PERIOD = 33
+from support.models import sancta_date
+from biorythms.models import (
+    bio, git_important_days, day_bio,
+    PHYSICAL_PERIOD, EMOTIONAL_PERIOD, BRAIN_PERIOD
+)
 
 def index(request):
     if request.method == 'POST':
@@ -41,89 +39,23 @@ def index(request):
     )
 
 
-def bio(time_diff, period):
-    return sin(2 * pi * time_diff / period) * 100
 
-def day_bio(time_diff):
-    return {
-        PHYSICAL_PERIOD: bio(time_diff, PHYSICAL_PERIOD),
-        EMOTIONAL_PERIOD: bio(time_diff, EMOTIONAL_PERIOD),
-        BRAIN_PERIOD: bio(time_diff, BRAIN_PERIOD),
-    }
-
-def git_important_days(birthday_dt, begin_date, end_date):
-    '''
-    высчитывает особые дни в период begin_date по end_date
-    '''
-    def get_critical_preiods(day, birthday_dt):
-        critical = []
-        for period in (EMOTIONAL_PERIOD, PHYSICAL_PERIOD, BRAIN_PERIOD):
-            time_diff = (day - birthday_dt).days
-            if int(bio(time_diff, period) * bio(time_diff+1, period)) < 0 \
-                or int(bio(time_diff, period)) == 0:
-                critical.append({
-                    'period':period,
-                    # + график возрастает
-                    # - график убывает
-                    'type': '+' if int(bio(time_diff+1, period))>0 else '-'
-                })
-
-        return critical
-    days = {}
-    for day in rrule(DAILY, dtstart=begin_date, until=end_date):
-        critical = get_critical_preiods(day, birthday_dt)
-        if critical:
-            if not days.get(day):
-                days[day.date()] = {}
-            days[day.date()].update({
-                'is_critical': True,
-                'critical_perods': critical,
-                'biorythms': day_bio((day - birthday_dt).days)
-            })
-
-            if len(critical) == 3 \
-            and not reduce(lambda res, x: res+(x['type']!='+'), critical, 0):
-                days[day.date()].update({
-                'is_critical': False,
-                'is_great_critical_day': True,
-                'critical_perods': critical,
-            })
-
-
-    return collections.OrderedDict(sorted(days.items()))
-
-
-
-
-def biorythm(request, birthday, month, year):
+def biorythm(request, birthday, cur_date=None):
+    today = date.today()
     try:
-        birthday_dt = datetime.strptime(birthday, '%Y-%m-%d')
+        #распарсим дату дня рождния
+        birthday_dt = datetime.strptime(birthday, '%Y-%m-%d').date()
+        if cur_date:
+            # если день на который нужно расчитать установлен,
+            # то распарсим его
+            cur_date = datetime.strptime(cur_date, '%Y-%m-%d').date()
+        else:
+            # если день на который нужно расчитать не установлен
+            # то будем считать на сегодня
+            cur_date = today
     except ValueError:
         raise Http404()
-
-
-
-    months = [
-        'январь', 'февраль', 'март',
-        'апрель', 'май', 'июнь',
-        'июль', 'август', 'сентябрь',
-        'октябрь', 'ноябрь', 'декабрь'
-    ]
-
-    today = date.today()
-
-    ch_month = today.month if month is None else int(month)
-    ch_year = today.year if year is None else int(year)
-    cur_date = date(ch_year, ch_month, 1)
-
-    begin_date = cur_date - timedelta(days=2)
-    end_date = date(
-        ch_year, ch_month, monthrange(ch_year, ch_month)[1]
-    ) + timedelta(days=2)
-
-    begin_days = (begin_date - birthday_dt.date()).days
-
-
+    begin_date, end_date = sancta_date.month_range(cur_date)
     data = [
         {
             'day': (
@@ -134,51 +66,30 @@ def biorythm(request, birthday, month, year):
             'smart': int(bio(t, 33)),
         }
         for t in xrange(
-            (begin_date - birthday_dt.date()).days,
-            (end_date - birthday_dt.date()).days
+            (begin_date - birthday_dt).days,
+            (end_date - birthday_dt).days
         )
     ]
 
-    def get_link(month_diff):
-        prev_date = date(ch_year, ch_month, 1) + relativedelta(months=month_diff)
-        if today.year != prev_date.year:
-            args = (birthday, ('%02d' %  prev_date.month), prev_date.year)
-        elif prev_date.month != today.month:
-            args = (birthday, '%02d' % prev_date.month)
-        else:
-            args = (birthday,)
-        return reverse('bio_birthday', args=args)
-
-
     critical_days = git_important_days(birthday_dt, begin_date, end_date)
 
-
     try:
-        today_info = critical_days[today]
+        curday_info = critical_days[cur_date]
     except:
-        today_info = {
+        curday_info = {
             'biorythms': day_bio(
-                (today - birthday_dt.date()).days
+                (cur_date - birthday_dt).days
             )
         }
-
 
     return render_to_response(
         'biorythms/biorythm.html',
         {
             'birthday': birthday_dt,
-            'today_date': today,
-            'today_info': today_info,
+            'today_date': cur_date,
+            'today_info': curday_info,
             'data': json.dumps(data),
-            'current_date': cur_date,
-            'link_pref':get_link(-1),
-            'link_next':get_link(1),
             'critical_days': critical_days,
-            'consts': {
-                'PHYSICAL_PERIOD': PHYSICAL_PERIOD,
-                'EMOTIONAL_PERIOD': EMOTIONAL_PERIOD,
-                'BRAIN_PERIOD': BRAIN_PERIOD
-            }
         },
         context_instance=RequestContext(request)
     )

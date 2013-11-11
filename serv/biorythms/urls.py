@@ -7,17 +7,12 @@ from datetime import date
 urlpatterns = patterns('',
     url(r'^$', 'biorythms.views.index', name='bio_home'),
     url(
-        r'(?P<birthday>\d{4}-\d{2}-\d{2})/(?P<month>\d{2})/(?P<year>\d{4})',
+        r'(?P<birthday>\d{4}-\d{2}-\d{2})/(?P<cur_date>\d{4}-\d{2}-\d{2})',
         'biorythms.views.biorythm', name='bio_birthday'
     ),
     url(
-        r'(?P<birthday>\d{4}-\d{2}-\d{2})/(?P<month>\d{2})',
-        'biorythms.views.biorythm', {'year': None},
-        name='bio_birthday'
-    ),
-    url(
         r'(?P<birthday>\d{4}-\d{2}-\d{2})',
-        'biorythms.views.biorythm', {'year':None, 'month':None},
+        'biorythms.views.biorythm', {'cur_date':None},
         name='bio_birthday'
     )
 )

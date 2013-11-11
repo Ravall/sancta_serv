@@ -25,6 +25,7 @@ INSTALLED_APPS += (
     'raven.contrib.django.raven_compat',
     'pytils',
     'support',
+    'django.contrib.humanize'
 )
 MIDDLEWARE_CLASSES += (
     'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
