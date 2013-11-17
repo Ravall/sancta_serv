@@ -10,14 +10,7 @@ register = template.Library()  #: Django template tag/filter registrator
 @register.filter
 def critical_type_info(info):
     type_info = ''
-    if DAY_TYPE_CRITICAL in info.keys():
-        if len(info[DAY_TYPE_CRITICAL]) == 2:
-            type_info = 'Двойной критический день:'
-        elif len(info[DAY_TYPE_CRITICAL]) == 3:
-            type_info = 'Тройной критический день:'
-        else:
-            type_info = 'Критический день:'
-    elif DAY_TYPE_GREAT_CRITICAL in info.keys():
+    if DAY_TYPE_GREAT_CRITICAL in info.keys():
         type_info = 'Великий критический день'
     return type_info
 
@@ -27,7 +20,7 @@ def period_info(info):
     day_info = ''
     if DAY_TYPE_PEAK in info.keys():
         for peaks in info[DAY_TYPE_PEAK]:
-            day_info +='<p>Высокие показатели ' if peaks['type'] == '+' else '<p>Низкие показатели'
+            day_info +='<span>Высокие показатели ' if peaks['type'] == '+' else '<p>Низкие показатели'
 
 
             if peaks['period'] == PHYSICAL_PERIOD:
@@ -36,12 +29,19 @@ def period_info(info):
                 day_info += ' эмоционального'
             elif peaks['period'] == BRAIN_PERIOD:
                 day_info += ' умственного'
-            day_info += ' биоритма</p>'
+            day_info += ' биоритма.</span><br/>'
 
     if DAY_TYPE_CRITICAL in info.keys():
         for indx, period in enumerate(info[DAY_TYPE_CRITICAL]):
             if indx == 0:
-                day_info += '<p>Переключение фазы'
+                if len(info[DAY_TYPE_CRITICAL]) == 2:
+                    type_info = 'Двойной критический день: '
+                elif len(info[DAY_TYPE_CRITICAL]) == 3:
+                    type_info = 'Тройной критический день: '
+                else:
+                    type_info = 'Критический день: '
+
+                day_info += type_info+'<span>переключение фазы'
             elif indx+1 == len(info[DAY_TYPE_CRITICAL]):
                 day_info += ' и '
             else:
@@ -55,7 +55,7 @@ def period_info(info):
                 day_info += ' умственного'
 
             if indx+1 == len(info[DAY_TYPE_CRITICAL]):
-                day_info += ' биоритма</p>'
+                day_info += ' биоритма.</span> '
     return day_info
 
 

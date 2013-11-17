@@ -1,5 +1,4 @@
 User-Agent: *
 Disallow: /admin/
-Disallow:
 
 Sitemap: http://sancta.ru/sitemap.xml

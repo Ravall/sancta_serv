@@ -20,6 +20,12 @@ from biorythms.models import (
 )
 
 def index(request):
+
+    content = utils.api_request(
+        'sancta/article/{0}.json'.format('biorythms_about')
+    )
+    content = json.loads(content)
+
     if request.method == 'POST':
         birthday_form = BirthdayForm(request.POST)
         if birthday_form.is_valid():
@@ -33,7 +39,9 @@ def index(request):
     return render_to_response(
         'biorythms/index.html',
         {
+            'url': 'bio_home',
             'form': birthday_form,
+            'content': content
         },
         context_instance=RequestContext(request)
     )
@@ -90,6 +98,8 @@ def biorythm(request, birthday, cur_date=None):
             'today_info': curday_info,
             'data': json.dumps(data),
             'critical_days': critical_days,
+            'real_today':today,
+            'url': 'bio_home',
         },
         context_instance=RequestContext(request)
     )

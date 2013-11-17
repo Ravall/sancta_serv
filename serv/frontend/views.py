@@ -6,4 +6,7 @@ from django.core.urlresolvers import reverse
 
 
 def index(request):
-    return HttpResponsePermanentRedirect(reverse('num_home'))
+    return render_to_response(
+        'frontend/index.html',
+        context_instance=RequestContext(request)
+    )
