@@ -12,38 +12,25 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content="{% block meta_description %}{% endblock %}" />
     <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+    <title>{% block meta_title %}{% endblock %}</title>
     {% block og_meta %}{% endblock %}
     <meta name="document-state" content="Dynamic" />
     <meta http-equiv="content-language" content="ru" />
-    <title>Нумерология: {% block page_title %}{% endblock %}</title>
     <script src="{% static "js/jquery-2.0.3.min.js" %}"></script>
     <script src="{% static "js/jquery.placeholder.min.js" %}"></script>
     <script src="{% static "js/jquery.maskedinput.min.js" %}"></script>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link type="text/css" rel="stylesheet" href="{% static "css/numerology.css" %}" charset="utf-8">
+    {% block css %}{% endblock %}
     <link href='http://fonts.googleapis.com/css?family=Ubuntu:300|Spirax|Open+Sans:300&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="{% static "css/style.css" %}" charset="utf-8">
 </head>
-
-<body>
-    <div id='ul'>
-        <div id='ur'>
-            <div id='dr'>
-                <div id='dl'>
-                    {% block base_content %}{% endblock %}
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
+<body>{% block base_content %}{% endblock %}</body>
 </html>
+
 {% block block_js %}{% endblock %}
-<script type="text/javascript">
-    jQuery(function(){
-        jQuery('input[placeholder], textarea[placeholder]').placeholder('');
-        jQuery("#id_date").mask("99.99.9999");
-    });
-</script>
+
+
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -57,7 +44,6 @@
                     accurateTrackBounce:true});
         } catch(e) { }
     });
-
     var n = d.getElementsByTagName("script")[0],
         s = d.createElement("script"),
         f = function () { n.parentNode.insertBefore(s, n); };

@@ -1,0 +1,79 @@
+{% extends 'biorythms/layout.html' %}
+{% load static %}
+
+{% block page_title %}расчет биоритмов человека онлайн {% endblock %}
+{% block meta_description %}Биоритмы — природные циклы, которым подвержено все в природе. Рассчитав биоритмы, вы получите график, показывающий периоды повышенной и приниженной активности, пиковые точки ваших ритмов.{% endblock %}
+
+
+
+{% block content %}
+
+
+ <div id='form' class='circle'>
+
+        <form action="/biorythms/" method="post" {% if form.errors %} class='error' {% endif %}>
+          <h1> Расчет<br/>биоритмов </h1>
+            {% csrf_token %}
+            {{ form.date }}
+            {{ form.date.errors }}
+            <div id='button'>
+                <button type="submit">рассчитать</button>
+            </div>
+        </form>
+    </div>
+
+
+
+<div id='text_content'>
+  {% autoescape off %}
+    {{content.text.content}}
+  {% endautoescape %}
+</div>
+{% endblock %}
+
+
+{% block block_jsd %}
+<script src="{% static "js/raphael-min.js" %}"></script>
+<script src="{% static "js/morris-0.4.3.min.js" %}"></script>
+<script type="text/javascript">
+    new Morris.Line({
+  element: 'biorythms_chart',
+  data: {{ data }},
+  dateFormat: function (x) {
+      function addZero(i) {
+          return (i < 10)? "0" + i: i;
+      }
+      var day = new Date(x);
+      return (
+          addZero(day.getDate()) + '.' +
+          addZero(day.getMonth()+1) + '.' +
+          day.getFullYear()
+      );
+  },
+  xLabelFormat: function (x) {
+      function addZero(i) {
+          return (i < 10)? "0" + i: i;
+      }
+      var day = new Date(x);
+      return addZero(day.getDate())+'.'+addZero(day.getMonth()+1);
+  },
+
+  xkey: 'year',
+  ykeys: ['value', 'value2'],
+  labels: ['Эмоциональные', 'Vv'],
+  hideHover: 'auto',
+  events: ['2012-02-26']
+});
+
+</script>
+{% endblock %}
+
+
+{% block block_js %}
+<script type="text/javascript">
+    jQuery(function(){
+        jQuery('input[placeholder], textarea[placeholder]').placeholder('');
+        jQuery("#id_date").mask("99.99.9999");
+    });
+</script>
+{% endblock %}

@@ -1,11 +1,9 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
-admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'numerology.views.index', name='num_home'),
     url(r'(?P<digit>[0-9]+)', 'numerology.views.digit_birhday', name='num_birthday'),

@@ -2,7 +2,7 @@ files/media/scss/.sass-cache/*
 .sass-cache/
 files/collected_static/
 *.py[cod]
-
+files/media/css/*
 # C extensions
 *.so
 

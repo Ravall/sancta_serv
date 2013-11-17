@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from control_dj.settings import *
-
 if DEBUG:
     DATABASES = {
         'default': {
@@ -14,6 +13,7 @@ if DEBUG:
     }
 else:
     from production import DATABASES
+
 API_URL = 'http://api.sancta.local' if not DEBUG else 'http://api.sancta.ru'
 
 ALLOWED_HOSTS = ['sancta.ru', '127.0.0.1']
@@ -21,7 +21,11 @@ ALLOWED_HOSTS = ['sancta.ru', '127.0.0.1']
 
 INSTALLED_APPS += (
     'numerology',
+    'biorythms',
     'raven.contrib.django.raven_compat',
+    'pytils',
+    'support',
+    'django.contrib.humanize'
 )
 MIDDLEWARE_CLASSES += (
     'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
@@ -35,10 +39,11 @@ WSGI_APPLICATION = 'serv.wsgi.application'
 CACHE_API_TIMEOUT = 60*60*24*3
 CACHE_API_TIMEOUT_FAST = 60*1
 
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/home/var/cache/'
+        'LOCATION': '/home/var/cache/' if not DEBUG else '/tmp/cache'
     },
 }
 

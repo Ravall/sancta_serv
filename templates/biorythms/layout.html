@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+
+{% block og_meta %}
+    <meta property="og:image" content="{% get_static_prefix %}img/biorythms.png" />
+    <link rel="image_src" href="{% get_static_prefix %}img/biorythms.png" />
+{% endblock %}
+
+
+{% block css %}
+    <link
+        type="text/css" rel="stylesheet"
+        href="{% static "css/morris-0.4.3.min.css" %}" charset="utf-8">
+    <link
+        type="text/css" rel="stylesheet"
+        href="{% static "css/biorythms.css" %}" charset="utf-8">
+{% endblock %}
+
+{% block meta_title %}Биоритмы: {% block page_title %}{% endblock %}{% endblock %}
+
+
+{% block base_content %}
+<div id='top'></div>
+<div id='menu'>
+    <ul>
+        <li>
+            <a href='{% url 'home' %}'>&larr; другие сервисы</a>
+        </li>
+        <li {% if url == 'bio_home' %}class='active'{% endif %}>
+            <a href='{% url 'bio_home' %}'>расчет биоритмов </a>
+        </li>
+    </ul>
+</div>
+{% block content %}{% endblock %}
+<div id='down'></div>
+{% endblock %}
+
+

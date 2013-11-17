@@ -1,0 +1,126 @@
+{% extends 'biorythms/layout.html' %}
+{% load static %}
+{% load sancta_date %}
+{% load bio_dayinfo %}
+
+{% block page_title %} по дате рождения {{ birthday|snct_dateformat:"[dd].[mm].[y]" }} на {{ today_date|snct_dateformat:"[M1] [iY]" }} {% endblock %}
+{% block content %}
+<div id='title'>
+    <h1>
+      <a href='{% url 'bio_birthday' birthday today_date|snct_minc:"-1"|snct_dateformat:"[Y]-[mm]-01" %}'>&larr;</a>
+      Биоритмы на {{ today_date|snct_dateformat:"[M1] [iY]" }}
+    <a href='{% url 'bio_birthday' birthday today_date|snct_minc:"1"|snct_dateformat:"[Y]-[mm]-01" %}'>&rarr;</a>
+    </h1>
+    <h2> Дата рождения: {{ birthday|snct_dateformat:"[dd].[mm].[y]" }} </h2>
+    (<a href='{% url 'bio_home' %}'>установить другую дату</a>)
+</div>
+
+<div id='biorythms_chart' style='height:300px;'></div>
+
+<div id='smart_nav'>
+    <a
+      {% if today_date == real_today|snct_dinc:"-1" %}class = 'active'{% endif %}
+      href='{% url 'bio_birthday' birthday real_today|snct_dinc:"-1" %}'>
+      вчера
+    </a>
+    <a
+      {% if today_date == real_today %}class = 'active'{% endif %}
+      href='{% url 'bio_birthday' birthday real_today %}'>
+      сегодня
+    </a>
+    <a
+      {% if today_date == real_today|snct_dinc:"1" %}class = 'active'{% endif %}
+      href='{% url 'bio_birthday' birthday real_today|snct_dinc:"1" %}'>
+      завтра
+    </a>
+</div>
+
+<div id='content'>
+
+
+<h2>
+  <a href='{% url 'bio_birthday' birthday today_date|snct_dinc:"-1" %}'>&larr;</a>
+  {{ today_date| snct_dateformat:"[iToday] [d] [M2] [Y]"}}
+  <a href='{% url 'bio_birthday' birthday today_date|snct_dinc:"1" %}'>&rarr;</a>
+</h2>
+
+
+<div id='todayinfo'>
+
+
+
+    <div class='biorithms'>
+        Физический биоритм: {{ today_info|biorithm:23|safe }}<br/>
+        Эмоциональный биоритм: {{ today_info|biorithm:28|safe}}<br/>
+        Умственный биоритм: {{ today_info|biorithm:33|safe}}<br/>
+    </div>
+
+    {% autoescape off %}
+    {% if today_date in critical_days %}
+      <div class='day_info'>
+      <b>Особенность дня:</b>
+      <p>{{ today_info|critical_type_info }}
+      {{ today_info|period_info  }}</p>
+      </div>
+    {% endif %}
+    {% endautoescape %}
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block block_js %}
+<script src="{% static "js/raphael-min.js" %}"></script>
+<script src="{% static "js/morris-0.4.3.min.js" %}"></script>
+<script type="text/javascript">
+    new Morris.Line({
+  element: 'biorythms_chart',
+  {% autoescape off %}
+      data: {{ data }},
+  {% endautoescape %}
+  dateFormat: function (x) {
+      function addZero(i) {
+          return (i < 10)? "0" + i: i;
+      }
+      function week_day(x) {
+        switch(x) {
+            case 0:r = "Воскресенье";break;
+            case 1:r = "Понедельник";break;
+            case 2:r = "Вторник";break;
+            case 3:r = "Среда";break;
+            case 4:r = "Четверг";break;
+            case 5:r = "Пятница";break;
+            case 6:r = "Суббота";break;
+        }
+        return r;
+      }
+      var day = new Date(x);
+      return (
+          week_day(day.getDay())+'<br/>' +
+          addZero(day.getDate()) + '.' +
+          addZero(day.getMonth()+1) + '.' +
+          day.getFullYear()
+      );
+  },
+  xLabelFormat: function (x) {
+      function addZero(i) {
+          return (i < 10)? "0" + i: i;
+      }
+      var day = new Date(x);
+      return addZero(day.getDate())+'.'+addZero(day.getMonth()+1);
+  },
+
+  xkey: 'day',
+  ykeys: ['fiz', 'emo', 'smart'],
+  labels: ['физический', 'эмоциональный', 'интеллектуальный'],
+  hideHover: 'auto',
+  {% if today_date|snct_dateformat:"[m].[y]" == today_date|snct_dateformat:"[m].[y]" %}
+  events: ['{{ today_date|snct_dateformat:"[Y]-[mm]-[dd]" }}'],
+  {% endif %}
+  pointSize:2,
+  lineColors: ['#e67869','#3b9647', '#193020'],
+});
+
+</script>
+{% endblock %}
